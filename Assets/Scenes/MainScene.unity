@@ -294,9 +294,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c978fdcb18b784395ee4581c3a0bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidbody: {fileID: 0}
+  rigidbody: {fileID: 1046962833}
   speed: 5
   jumpSpeed: 5
+  collider2D: {fileID: 1346850487}
+  ground:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!212 &1046962835
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -401,7 +405,7 @@ GameObject:
   - component: {fileID: 1346850489}
   - component: {fileID: 1346850488}
   - component: {fileID: 1346850487}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Square (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -417,7 +421,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1346850486}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 9514816a73c23f84c9d55a65bdd98654, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -494,8 +498,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1346850486}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.68, y: -2.18, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.57, y: -1.9558, z: 0}
+  m_LocalScale: {x: 22.884283, y: 1.5192313, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
