@@ -294,13 +294,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c978fdcb18b784395ee4581c3a0bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigidbody: {fileID: 1046962833}
-  speed: 5
-  jumpSpeed: 5
-  collider2D: {fileID: 1346850487}
-  ground:
-    serializedVersion: 2
-    m_Bits: 8
+  runSpeed: 5
+  jumpRestTimes: 0
+  JumpSpeed: 10
+  jumpMaxTimes: 1
 --- !u!212 &1046962835
 SpriteRenderer:
   m_ObjectHideFlags: 0
