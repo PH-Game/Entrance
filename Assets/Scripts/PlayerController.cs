@@ -4,42 +4,81 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Rigidbody2D rigidbody;
-    public float speed;
-    public float jumpSpeed;
-    public BoxCollider2D collider2D;
-    public LayerMask ground;
+    public float runSpeed;
+    private Rigidbody2D playerRigidbody;
+    private Animator playerAnimator;
+    public int jumpRestTimes;
+    public float JumpSpeed;
+    public int jumpMaxTimes;
+    private BoxCollider2D playerBoxCollider;
+    private LayerMask ground;
+    private bool isGround;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        playerRigidbody = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponent<Animator>();
+        playerBoxCollider = GetComponent<BoxCollider2D>();
+        ground = LayerMask.GetMask("Ground");
+        jumpRestTimes = jumpMaxTimes;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Movement();
+        Run();
+        Flip();
+        Jump();
     }
 
-    void Movement()
+    void CheckGround()
     {
-        float movementX = Input.GetAxis("Horizontal");
-        float faceDirection = Input.GetAxisRaw("Horizontal");
-        bool movementY = false;
+        isGround =  playerBoxCollider.IsTouchingLayers(ground);
+    }
 
-        if (collider2D.IsTouchingLayers(ground))
+    void Run()
+    {
+        float moveDir = Input.GetAxis("Horizontal");
+        Vector2 playerVel = new Vector2(moveDir * runSpeed, playerRigidbody.velocity.y);
+        playerRigidbody.velocity = playerVel;
+        bool playerHasAxisSpeed = Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon;
+        //playerAnimator.SetBool("Run", playerHasAxisSpeed);
+
+
+    }
+    void Flip()
+    {
+        bool playerHasAxisSpeed = Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon;
+        if (playerHasAxisSpeed)
         {
-            movementY = Input.GetButtonDown("Jump");
+            if (playerRigidbody.velocity.x > 0.1f)
+            {
+                transform.localRotation = Quaternion.Euler(0, 0, 0);
+            }
+            if (playerRigidbody.velocity.x < -0.1f)
+            {
+                transform.localRotation = Quaternion.Euler(0, 180, 0);
+            }
         }
-
-        rigidbody.velocity = new Vector2(movementX * speed, rigidbody.velocity.y + isJump(movementY) * jumpSpeed);
-        transform.localScale = new Vector3(faceDirection, 1, 1);
     }
-
-    float isJump(bool jump)
+    void Jump()
     {
-        if(jump) return 1;
-        else return 0;
+        if (Input.GetButtonDown("Jump"))
+        {
+            CheckGround();
+
+            if (isGround)
+            {
+                jumpRestTimes = jumpMaxTimes;
+            }
+
+            if (jumpRestTimes != 0)
+            {
+                Vector2 jumpVel = new Vector2(0.0f, JumpSpeed);
+                playerRigidbody.velocity = Vector2.up * jumpVel;
+                jumpRestTimes--;
+            }
+        }
     }
 }
