@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     private BoxCollider2D playerBoxCollider;
     private LayerMask ground;
     private bool isGround;
+    public float dashCD, dashSpeed, dashLen;
+    private float lastDash;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,7 @@ public class PlayerController : MonoBehaviour
         playerBoxCollider = GetComponent<BoxCollider2D>();
         ground = LayerMask.GetMask("Ground");
         jumpRestTimes = jumpMaxTimes;
+        lastDash = (float)-1e6;
     }
 
     // Update is called once per frame
@@ -30,6 +33,7 @@ public class PlayerController : MonoBehaviour
         Run();
         Flip();
         Jump();
+        Dash();
     }
 
     void CheckGround()
@@ -39,14 +43,16 @@ public class PlayerController : MonoBehaviour
 
     void Run()
     {
-        float moveDir = Input.GetAxis("Horizontal");
-        Vector2 playerVel = new Vector2(moveDir * runSpeed, playerRigidbody.velocity.y);
-        playerRigidbody.velocity = playerVel;
-        bool playerHasAxisSpeed = Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon;
-        //playerAnimator.SetBool("Run", playerHasAxisSpeed);
-
-
+        if(Time.time - lastDash > dashLen)
+        {
+            float moveDir = Input.GetAxis("Horizontal");
+            Vector2 playerVel = new Vector2(moveDir * runSpeed, playerRigidbody.velocity.y);
+            playerRigidbody.velocity = playerVel;
+            bool playerHasAxisSpeed = Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon;
+            //playerAnimator.SetBool("Run", playerHasAxisSpeed);
+        }
     }
+
     void Flip()
     {
         bool playerHasAxisSpeed = Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon;
@@ -54,17 +60,18 @@ public class PlayerController : MonoBehaviour
         {
             if (playerRigidbody.velocity.x > 0.1f)
             {
-                transform.localRotation = Quaternion.Euler(0, 0, 0);
+                transform.rotation = Quaternion.Euler(0, 0, 0);
             }
             if (playerRigidbody.velocity.x < -0.1f)
             {
-                transform.localRotation = Quaternion.Euler(0, 180, 0);
+                transform.rotation = Quaternion.Euler(0, 180, 0);
             }
         }
     }
+
     void Jump()
     {
-        if (Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump") || Input.GetKeyDown("w"))
         {
             CheckGround();
 
@@ -80,5 +87,31 @@ public class PlayerController : MonoBehaviour
                 jumpRestTimes--;
             }
         }
+    }
+
+    float FacingDir()
+    {
+        if(transform.rotation == Quaternion.Euler(0, 0, 0))
+        {
+            return 1;
+        }
+        if(transform.rotation == Quaternion.Euler(0, 180, 0))
+        {
+            return -1;
+        }
+        return -1;
+    }
+
+    void Dash()
+    {
+       if(Input.GetKeyDown(KeyCode.LeftShift) && Time.time - lastDash > dashCD)
+       {
+            lastDash = Time.time;
+       }
+       if(Time.time - lastDash < dashLen)
+       {
+            Vector2 playerVel = new Vector2(dashSpeed * FacingDir(), playerRigidbody.velocity.y);
+            playerRigidbody.velocity = playerVel;
+       }
     }
 }

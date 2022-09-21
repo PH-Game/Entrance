@@ -276,7 +276,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 10
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -294,10 +294,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0c978fdcb18b784395ee4581c3a0bcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runSpeed: 5
+  runSpeed: 15
   jumpRestTimes: 0
-  JumpSpeed: 10
+  JumpSpeed: 30
   jumpMaxTimes: 1
+  dashCD: 0.5
+  dashSpeed: 80
+  dashLen: 0.1
 --- !u!212 &1046962835
 SpriteRenderer:
   m_ObjectHideFlags: 0
