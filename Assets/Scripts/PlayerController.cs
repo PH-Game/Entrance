@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
     public float runSpeed;
     private Rigidbody2D playerRigidbody;
-    private Animator playerAnimator;
+    //private Animator playerAnimator;
     private int jumpRestTimes;
     public float JumpSpeed;
     public int jumpMaxTimes;
@@ -18,11 +16,10 @@ public class PlayerController : MonoBehaviour
     private float lastHover, hoverStart;
     private bool isHovering;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerRigidbody = GetComponent<Rigidbody2D>();
-        playerAnimator = GetComponent<Animator>();
+        //playerAnimator = GetComponent<Animator>();
         playerBoxCollider = GetComponent<BoxCollider2D>();
         ground = LayerMask.GetMask("Ground");
         jumpRestTimes = jumpMaxTimes;
@@ -31,7 +28,6 @@ public class PlayerController : MonoBehaviour
         isHovering = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
         Run();
@@ -50,10 +46,14 @@ public class PlayerController : MonoBehaviour
     {
         if(Time.time - lastDash > dashLen && !isHovering)
         {
+            // Get Horizontal Direction
             float moveDir = Input.GetAxis("Horizontal");
+            // Construct Movement Vector
             Vector2 playerVel = new Vector2(moveDir * runSpeed, playerRigidbody.velocity.y);
+            // Set Velocity
             playerRigidbody.velocity = playerVel;
-            bool playerHasAxisSpeed = Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon;
+
+            //bool playerHasAxisSpeed = Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon;
             //playerAnimator.SetBool("Run", playerHasAxisSpeed);
         }
     }
@@ -61,14 +61,20 @@ public class PlayerController : MonoBehaviour
     void Flip()
     {
         bool playerHasAxisSpeed = Mathf.Abs(playerRigidbody.velocity.x) > Mathf.Epsilon;
+
         if (playerHasAxisSpeed)
         {
+            // If Face Right
             if (playerRigidbody.velocity.x > 0.1f)
             {
+                // Set Sprite Direction to Right
                 transform.rotation = Quaternion.Euler(0, 0, 0);
             }
+
+            // If Face Left
             if (playerRigidbody.velocity.x < -0.1f)
             {
+                // Set Sprite Direction to Left
                 transform.rotation = Quaternion.Euler(0, 180, 0);
             }
         }
@@ -76,42 +82,53 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
+        // If Pressed `Space` or `w`
         if ((Input.GetButtonDown("Jump") || Input.GetKeyDown("w")) && !isHovering)
         {
+            // If Player On Ground
             if (CheckGround())
             {
+                // Reset Jumped Rest Time
                 jumpRestTimes = jumpMaxTimes;
             }
+
+            // If Still Remain Jump Rest Time
             if (jumpRestTimes != 0)
             {
+                // Set Vertical Speed (Jump Speed)
                 Vector2 jumpVel = new Vector2(0.0f, JumpSpeed);
+                // Set Vertical Velocity
                 playerRigidbody.velocity = Vector2.up * jumpVel;
+                // Minus Jump Rest Time
                 jumpRestTimes--;
             }
         }
     }
 
+    // Get Facing Direction
     float FacingDir()
     {
         if(transform.rotation == Quaternion.Euler(0, 0, 0))
         {
             return 1;
         }
-        if(transform.rotation == Quaternion.Euler(0, 180, 0))
-        {
-            return -1;
-        }
+
         return -1;
     }
 
     void Dash()
     {
+       // If Pressed Left Shift and not in CD
        if(Input.GetKeyDown(KeyCode.LeftShift) && Time.time - lastDash > dashCD)
        {
+            // Set Dash Time to Now
             lastDash = Time.time;
        }
+
+       // If Not In CD
        if(Time.time - lastDash < dashLen)
        {
+            // Plus a Horizontal Dash Velocity
             Vector2 playerVel = new Vector2(dashSpeed * FacingDir(), 0);
             playerRigidbody.velocity = playerVel;
        }
@@ -123,6 +140,7 @@ public class PlayerController : MonoBehaviour
         {
             isHovering = true;
             hoverStart = Time.time;
+
             if(CheckGround())
             {
                 Vector2 playerVel = new Vector2(0, JumpstartSpeed);
@@ -132,14 +150,17 @@ public class PlayerController : MonoBehaviour
         if(isHovering && Time.time - hoverStart < hoverLen && Time.time - hoverStart > 0.1)
         {
             lastHover = Time.time;
+
             if(CheckGround())
             {
                 isHovering = false;
             }
+
             float xMoveDir = Input.GetAxis("Horizontal"), yMoveDir = Input.GetAxis("Vertical");
             Vector2 playerVel = new Vector2(xMoveDir * hoverSpeed, yMoveDir * hoverSpeed * 0.5f);
             playerRigidbody.velocity = playerVel;
         }
+
         if(Time.time - hoverStart > hoverLen)
         {
             isHovering = false;
