@@ -1,4 +1,13 @@
 {
+  "scopedRegistries": [
+    {
+      "name": "NPM",
+      "url": "https://registry.npmjs.org",
+      "scopes": [
+        "com.fluid"
+      ]
+    }
+  ],
   "dependencies": {
     "com.unity.cinemachine": "2.8.9",
     "com.unity.collab-proxy": "1.17.2",
@@ -42,6 +51,7 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0"
+    "com.unity.modules.xr": "1.0.0",
+    "com.fluid.dialogue": "1.0.0"
   }
 }
