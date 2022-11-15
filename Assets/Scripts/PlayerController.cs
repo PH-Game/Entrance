@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
         Dash();
         Hover();
 
-        if (playerRigidbody.position.y < -10)
+        if (playerRigidbody.position.y < -3)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
